@@ -13,7 +13,7 @@ where P: AsRef<Path>, {
 
 //A/X -> rock = 1 //B/Y -> paper = 2
 //C/Z -> Scissors = 3 // 0, 3, 6 = lose, draw, win
-fn calc_line_score(hands: Vec<&str>) -> u32 {
+fn _calc_line_score_p1(hands: Vec<&str>) -> u32 {
     let mut inner_sum: u32 = 0;
     let win = 6;
     let draw = 3;
@@ -50,6 +50,46 @@ fn calc_line_score(hands: Vec<&str>) -> u32 {
 
 }
 
+//X means you need to lose,
+//Y means you need to end the round in a draw,
+//and Z means you need to win.
+fn calc_line_score_p2(hands: Vec<&str>) -> u32 {
+    let mut inner_sum: u32 = 0;
+
+    match hands[1] {
+        "X" => {
+            match hands[0] {
+                "A" => {inner_sum += 3;}, // play Scissors
+                "B" => {inner_sum += 1;}, //play rock
+                "C" => {inner_sum += 2;}, //play paper
+                _ => {},
+            };
+        },
+        "Y" => {
+            inner_sum += 3;
+            match hands[0] {
+                "A" => {inner_sum += 1;},
+                "B" => {inner_sum += 2;},
+                "C" => {inner_sum += 3;}
+                _ => {},
+            }
+        },
+        "Z" => {
+            inner_sum += 6;
+            match hands[0] {
+                "A" => { inner_sum += 2; }, //play paper
+                "B" => { inner_sum += 3; }, //play Scissors
+                "C" => { inner_sum += 1; }, //play rock
+                _ => {},
+            }
+        }
+        _ => println!("Unknown value: {}", hands[1]),
+    };
+
+    return inner_sum;
+
+}
+
 fn main() {
     let mut total_sum: u32 = 0;
     let filename = "./data/real.txt";
@@ -64,7 +104,7 @@ fn main() {
             Ok(line) => {
                 //do stuff
 
-                total_sum += calc_line_score(line.split_whitespace().collect());
+                total_sum += calc_line_score_p2(line.split_whitespace().collect());
 
             }
         }
