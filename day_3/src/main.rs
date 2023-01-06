@@ -34,6 +34,18 @@ fn find_matches(mut left: Vec<char>) -> Vec<char> {
     return matches;
 }
 
+fn convert_to_prio(item: char) -> u8 {
+    match item {
+        'a'..='z' => {
+            return (item as u8) - 96;
+        },
+        'A'..='Z' => {
+            return (item as u8) - 38;
+        },
+        _ => { return 0; },
+    }
+}
+
 fn main() {
     let filename = "./data/example.txt";
     let lines  = match read_lines(filename) {
@@ -41,13 +53,22 @@ fn main() {
         Ok(lines) => lines
     };
 
+    let mut matches: Vec<Vec<char>> = Vec::new();
     for line in lines {
         match line {
             Err(why) => panic!("Error on reading the line: {}", why),
             Ok(line) => {
-                let matches = find_matches(line.chars().collect());
-                println!("{:?}", matches);
+                matches.push(find_matches(line.chars().collect()));
             }
         }
     }
+
+    println!("{:?}", matches);
+    let mut sum = 0;
+    for submatch in matches {
+        for item in submatch {
+            sum += convert_to_prio(item);
+        }
+    }
+    println!("{}", sum);
 }
