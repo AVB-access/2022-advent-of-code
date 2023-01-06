@@ -34,20 +34,20 @@ fn find_matches(mut left: Vec<char>) -> Vec<char> {
     return matches;
 }
 
-fn convert_to_prio(item: char) -> u8 {
+fn convert_to_prio(item: char) -> u32 {
     match item {
         'a'..='z' => {
-            return (item as u8) - 96;
+            return (item as u32) - 96;
         },
         'A'..='Z' => {
-            return (item as u8) - 38;
+            return (item as u32) - 38;
         },
         _ => { return 0; },
     }
 }
 
 fn main() {
-    let filename = "./data/example.txt";
+    let filename = "./data/real.txt";
     let lines  = match read_lines(filename) {
         Err(why) => panic!("Error trying to read lines on {} : {}", filename, why),
         Ok(lines) => lines
@@ -63,8 +63,8 @@ fn main() {
         }
     }
 
-    println!("{:?}", matches);
-    let mut sum = 0;
+    //println!("{:?}", matches);
+    let mut sum: u32 = 0;
     for submatch in matches {
         for item in submatch {
             sum += convert_to_prio(item);
