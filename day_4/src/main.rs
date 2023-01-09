@@ -25,7 +25,7 @@ fn main() {
             Err(why) => panic!("Error on reading the line: {}", why),
             Ok(line) => {
                 let true_ranges = ranges_from_line(&line);
-                if is_subrange(&true_ranges) {
+                if is_overlaping(&true_ranges) {
                     sum += 1;
                 }
             }
@@ -35,6 +35,7 @@ fn main() {
     println!("{}", sum);
 }
 
+//PART 1
 //let range a be the left range and b be the right
 //if start of a < start of b and end of b < end of a
     //sum += 1
@@ -43,6 +44,18 @@ fn is_subrange(ranges: &[u32;4]) -> bool {
     if ranges[0] <= ranges[2] && ranges[1] >= ranges[3] {
         return true;
     } else if ranges[2] <= ranges[0] && ranges[3] >= ranges[1] {
+        return true;
+    }
+    return false;
+}
+
+//PART 2
+fn is_overlaping(ranges: &[u32;4]) -> bool {
+    //start a <= start b and start b <= end a = true
+    //start b <= start a and start a <= end b = true
+    if ranges[0] <= ranges[2] && ranges[2] <= ranges[1] {
+        return true;
+    }else if ranges[2] <= ranges[0] && ranges[0] <= ranges[3] {
         return true;
     }
     return false;
