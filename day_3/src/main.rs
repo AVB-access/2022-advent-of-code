@@ -34,25 +34,32 @@ fn find_matches(mut left: Vec<char>) -> Vec<char> {
     return matches;
 }
 
-fn convert_to_prio(item: char) -> u32 {
+fn convert_to_prio(item: &char) -> u32 {
     match item {
         'a'..='z' => {
-            return (item as u32) - 96;
+            return (*item as u32) - 96;
         },
         'A'..='Z' => {
-            return (item as u32) - 38;
+            return (*item as u32) - 38;
         },
         _ => { return 0; },
     }
 }
+fn find_group(bags: &Vec<String>) -> char {
+    let bag_a: HashSet<char> = vec_to_set(bags[0].chars().collect());
+    let mut inter: Vec<&char> = bag_a.iter().filter(|&x| bags[1].contains(*x) && bags[2].contains(*x)).collect();
+
+    return inter[0].clone();
+}
 
 fn main() {
     let filename = "./data/real.txt";
-    let lines  = match read_lines(filename) {
+    let mut lines  = match read_lines(filename) {
         Err(why) => panic!("Error trying to read lines on {} : {}", filename, why),
-        Ok(lines) => lines
+        Ok(lines) => lines.peekable()
     };
 
+    /* Part 1 solution
     let mut matches: Vec<Vec<char>> = Vec::new();
     for line in lines {
         match line {
@@ -62,13 +69,31 @@ fn main() {
             }
         }
     }
-
     //println!("{:?}", matches);
     let mut sum: u32 = 0;
     for submatch in matches {
         for item in submatch {
             sum += convert_to_prio(item);
         }
+    }*/
+
+    //Part 2 assuming always divisible by 3
+    let mut i = 1;
+    let mut group_bags: Vec<String> = Vec::new();
+    let mut groups: Vec<char> = Vec::new();
+    while !lines.peek().is_none() {
+        group_bags.push(lines.next().unwrap().unwrap());
+        if (i % 3) == 0 {
+            groups.push(find_group(&group_bags));
+            group_bags.clear();
+        }
+        i += 1;
+    }
+    println!("{:?}", groups);
+
+    let mut sum: u32 = 0;
+    for group in groups {
+        sum += convert_to_prio(&group);
     }
     println!("{}", sum);
 }
