@@ -19,20 +19,33 @@ fn main() {
     };
 
     //Goal: find subsets of given ranges
-    //let mut sum: u32 = 0;
+    let mut sum: u32 = 0;
     for line in lines {
         match line {
             Err(why) => panic!("Error on reading the line: {}", why),
             Ok(line) => {
-                ranges_from_line(&line);
+                let true_ranges = ranges_from_line(&line);
+                if is_subrange(&true_ranges) {
+                    sum += 1;
+                }
             }
         };
-        //let range a be the left range and b be the right
-        //if start of a < start of b and end of b < end of a
-            //sum += 1
-        //or vise versa
     }
 
+    println!("{}", sum);
+}
+
+//let range a be the left range and b be the right
+//if start of a < start of b and end of b < end of a
+    //sum += 1
+//or vise versa
+fn is_subrange(ranges: &[u32;4]) -> bool {
+    if ranges[0] <= ranges[2] && ranges[1] >= ranges[3] {
+        return true;
+    } else if ranges[2] <= ranges[0] && ranges[3] >= ranges[1] {
+        return true;
+    }
+    return false;
 }
 
 /*
@@ -47,6 +60,6 @@ fn ranges_from_line(line: &String) -> [u32; 4] {
     for (i, x) in ranges.enumerate(){
         num_ranges[i] = x.parse::<u32>().unwrap();
     }
-    
+
     return num_ranges;
 }
